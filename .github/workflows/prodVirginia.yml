@@ -32,7 +32,7 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+        ECR_REPOSITORY: microservicio-devops
         IMAGE_TAG: ${{ github.sha }}
       run: |
         if [ -z "$ECR_REGISTRY" ]; then
@@ -57,19 +57,18 @@ jobs:
     
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
     
-
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: ${{ vars.ECS_TASK_DEFINITION }}
         container-name: ${{ vars.CONTAINER_NAME }}
-        image: ${{ vars.image }}
+        image: ${{ steps.build-image.outputs.image }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v2
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: ${{ vars.ECS_SERVICE }}
-        cluster: ${{ vars.ECS_CLUSTER }}
+        service: MicroservicioDevOpsService
+        cluster: MicroservicioDevOpsCluster
         wait-for-service-stability: true
