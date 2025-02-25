@@ -103,7 +103,7 @@ Resources:
       TargetType: ip
       HealthCheckProtocol: HTTP
       HealthCheckPort: traffic-port
-      HealthCheckPath: /
+      HealthCheckPath: /health
       Matcher:
         HttpCode: 200
 

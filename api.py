@@ -55,3 +55,7 @@ def invalid_method():
 @app.delete("/DevOps")
 def invalid_method():
     raise HTTPException(status_code=405, detail="ERROR")
+
+@app.get("/health")
+def health_check():
+    return {"status": "OK"}
